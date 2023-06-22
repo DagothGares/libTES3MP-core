@@ -29,7 +29,7 @@ pub const default = @import("binding/default.zig");
 // The prefix used for variables intended to hold TES3MP-supplied function pointers.
 pub export var prefix: [3]u8 = "zig".*;
 
-const c_str = ?[*:0]const u8;
+pub const c_str = ?[*:0]const u8;
 // Honestly, I have no idea how to translate this from C++.
 pub const cpp_ScriptFunc = *const fn (...) callconv(.C) void;
 

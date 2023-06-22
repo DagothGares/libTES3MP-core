@@ -5,6 +5,11 @@ const binding = @import("../binding.zig");
 const c_str = binding.c_str;
 
 pub export var zigLogMessage: *const fn (c_ushort, c_str) callconv(.C) void = &binding.ub_fn_ushort_str;
+
+pub export fn impl_logMessage(pid: c_ushort, message: c_str) callconv(.C) void {
+    @call(.never_inline, zigLogMessage, .{ pid, message });
+}
+
 pub export var zigLogAppend: *const fn (c_ushort, c_str) callconv(.C) void = &binding.ub_fn_ushort_str;
 pub export var zigStopServer: *const fn (c_int) callconv(.C) void = &binding.ub_fn_int;
 pub export var zigKick: *const fn (c_ushort) callconv(.C) void = &binding.ub_fn_ushort;
