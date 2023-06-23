@@ -1,3 +1,6 @@
+const std = @import("std");
+const builtin = @import("builtin");
+
 pub const actors = @import("binding/actors.zig");
 pub const books = @import("binding/books.zig");
 pub const cells = @import("binding/cells.zig");
@@ -30,8 +33,12 @@ pub const default = @import("binding/default.zig");
 pub export var prefix: [3]u8 = "zig".*;
 
 pub const c_str = ?[*:0]const u8;
-// Honestly, I have no idea how to translate this from C++.
-pub const cpp_ScriptFunc = *const fn (...) callconv(.C) void;
+pub const ForeignFunction = opaque {};
+// std.builtin.vaList is broken on Windows x86_64
+pub const va_list = switch (builtin.os.tag) {
+    .windows => std.os.windows.va_list,
+    else => std.builtin.VaList,
+};
 
 // TODO: determine if there's a way to automate making these
 pub fn ub_fn() callconv(.C) noreturn {
@@ -208,15 +215,15 @@ pub fn ub_fn_2int_str(_: c_int, _: c_int, _: c_str) callconv(.C) noreturn {
 pub fn ub_fn_str_int_uint(_: c_str, _: c_int, _: c_uint) callconv(.C) noreturn {
     unreachable;
 }
-pub fn ub_fn_fptrva_int(_: cpp_ScriptFunc, _: c_int) callconv(.C) noreturn {
+pub fn ub_fn_fptrva_int(_: *const ForeignFunction, _: c_int) callconv(.C) noreturn {
     unreachable;
 }
-pub fn ub_fn_fptrva_int_str_va(_: cpp_ScriptFunc, _: c_int, _: c_str, ...) callconv(.C) noreturn {
+pub fn ub_fn_fptrva_int_str_va(_: *const ForeignFunction, _: c_int, _: c_str, _: ?va_list) callconv(.C) noreturn {
     unreachable;
 }
-pub fn ub_fn_fptrva_str_char_str(_: cpp_ScriptFunc, _: c_str, _: c_char, _: c_str) callconv(.C) noreturn {
+pub fn ub_fn_fptrva_str_char_str(_: *const ForeignFunction, _: c_str, _: c_char, _: c_str) callconv(.C) noreturn {
     unreachable;
 }
-pub fn ub_fn_str_va(_: c_str, ...) callconv(.C) noreturn {
+pub fn ub_fn_str_va(_: c_str, _: ?va_list) callconv(.C) noreturn {
     unreachable;
 }

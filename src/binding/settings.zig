@@ -16,3 +16,55 @@ pub export var zigClearGameSettingValues: *const fn (c_ushort) callconv(.C) void
 pub export var zigSetVRSettingValue: *const fn (c_ushort, c_str, c_str) callconv(.C) void = &binding.ub_fn_ushort_2str;
 pub export var zigClearVRSettingValues: *const fn (c_ushort) callconv(.C) void = &binding.ub_fn_ushort;
 pub export var zigSendSettings: *const fn (c_ushort, bool, bool) callconv(.C) void = &binding.ub_fn_ushort_2bool;
+
+pub export fn impl_SetDifficulty(pid: c_ushort, difficulty: c_int) callconv(.C) void {
+    return @call(.never_inline, zigSetDifficulty, .{ pid, difficulty });
+}
+pub export fn impl_SetEnforcedLogLevel(pid: c_ushort, logLevel: c_int) callconv(.C) void {
+    return @call(.never_inline, zigSetEnforcedLogLevel, .{ pid, logLevel });
+}
+pub export fn impl_SetPhysicsFramerate(pid: c_ushort, framerate: f64) callconv(.C) void {
+    return @call(.never_inline, zigSetPhysicsFramerate, .{ pid, framerate });
+}
+pub export fn impl_SetConsoleAllowed(pid: c_ushort, consoleAllowed: bool) callconv(.C) void {
+    return @call(.never_inline, zigSetConsoleAllowed, .{ pid, consoleAllowed });
+}
+pub export fn impl_SetBedRestAllowed(pid: c_ushort, bedRestAllowed: bool) callconv(.C) void {
+    return @call(.never_inline, zigSetBedRestAllowed, .{ pid, bedRestAllowed });
+}
+pub export fn impl_SetWildernessRestAllowed(
+    pid: c_ushort,
+    wildernessRestAllowed: bool,
+) callconv(.C) void {
+    return @call(.never_inline, zigSetWildernessRestAllowed, .{ pid, wildernessRestAllowed });
+}
+pub export fn impl_SetWaitAllowed(pid: c_ushort, waitAllowed: bool) callconv(.C) void {
+    return @call(.never_inline, zigSetWaitAllowed, .{ pid, waitAllowed });
+}
+pub export fn impl_SetGameSettingValue(
+    pid: c_ushort,
+    setting: c_str,
+    value: c_str,
+) callconv(.C) void {
+    return @call(.never_inline, zigSetGameSettingValue, .{ pid, setting, value });
+}
+pub export fn impl_ClearGameSettingValues(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigClearGameSettingValues, .{pid});
+}
+pub export fn impl_SetVRSettingValue(
+    pid: c_ushort,
+    setting: c_str,
+    value: c_str,
+) callconv(.C) void {
+    return @call(.never_inline, zigSetVRSettingValue, .{ pid, setting, value });
+}
+pub export fn impl_ClearVRSettingValues(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigClearVRSettingValues, .{pid});
+}
+pub export fn impl_SendSettings(
+    pid: c_ushort,
+    sendToOtherPlayers: bool,
+    skipAttachedPlayer: bool,
+) callconv(.C) void {
+    return @call(.never_inline, zigSendSettings, .{ pid, sendToOtherPlayers, skipAttachedPlayer });
+}

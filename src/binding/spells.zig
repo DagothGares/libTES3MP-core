@@ -46,3 +46,185 @@ pub export var zigGetSpellsActiveEffectMagnitude: *const fn (c_ushort, c_uint, c
 pub export var zigGetSpellsActiveEffectDuration: *const fn (c_ushort, c_uint, c_uint) callconv(.C) f64 = &binding.ub_fn_ushort_2uint;
 pub export var zigGetSpellsActiveEffectTimeLeft: *const fn (c_ushort, c_uint, c_uint) callconv(.C) f64 = &binding.ub_fn_ushort_2uint;
 pub export var zigAddSpellActiveEffect: *const fn (c_ushort, c_int, f64, f64, f64, c_int) callconv(.C) void = &binding.ub_fn_ushort_int_3f64_int;
+
+pub export fn impl_ClearSpellbookChanges(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigClearSpellbookChanges, .{pid});
+}
+pub export fn impl_GetSpellbookChangesSize(pid: c_ushort) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetSpellbookChangesSize, .{pid});
+}
+pub export fn impl_GetSpellbookChangesAction(pid: c_ushort) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetSpellbookChangesAction, .{pid});
+}
+pub export fn impl_SetSpellbookChangesAction(pid: c_ushort, action: u8) callconv(.C) void {
+    return @call(.never_inline, zigSetSpellbookChangesAction, .{ pid, action });
+}
+pub export fn impl_GetSpellId(pid: c_ushort, index: c_uint) callconv(.C) c_str {
+    return @call(.never_inline, zigGetSpellId, .{ pid, index });
+}
+pub export fn impl_AddSpell(pid: c_ushort, spellId: c_str) callconv(.C) void {
+    return @call(.never_inline, zigAddSpell, .{ pid, spellId });
+}
+pub export fn impl_SendSpellbookChanges(
+    pid: c_ushort,
+    sendToOtherPlayers: bool,
+    skipAttachedPlayer: bool,
+) callconv(.C) void {
+    return @call(
+        .never_inline,
+        zigSendSpellbookChanges,
+        .{ pid, sendToOtherPlayers, skipAttachedPlayer },
+    );
+}
+pub export fn impl_ClearSpellsActiveChanges(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigClearSpellsActiveChanges, .{pid});
+}
+pub export fn impl_GetSpellsActiveChangesSize(pid: c_ushort) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetSpellsActiveChangesSize, .{pid});
+}
+pub export fn impl_GetSpellsActiveChangesAction(pid: c_ushort) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetSpellsActiveChangesAction, .{pid});
+}
+pub export fn impl_SetSpellsActiveChangesAction(pid: c_ushort, action: u8) callconv(.C) void {
+    return @call(.never_inline, zigSetSpellsActiveChangesAction, .{ pid, action });
+}
+pub export fn impl_GetSpellsActiveId(pid: c_ushort, index: c_uint) callconv(.C) c_str {
+    return @call(.never_inline, zigGetSpellsActiveId, .{ pid, index });
+}
+pub export fn impl_GetSpellsActiveDisplayName(pid: c_ushort, index: c_uint) callconv(.C) c_str {
+    return @call(.never_inline, zigGetSpellsActiveDisplayName, .{ pid, index });
+}
+pub export fn impl_GetSpellsActiveStackingState(pid: c_ushort, index: c_uint) callconv(.C) bool {
+    return @call(.never_inline, zigGetSpellsActiveStackingState, .{ pid, index });
+}
+pub export fn impl_AddSpellActive(
+    pid: c_ushort,
+    spellId: c_str,
+    displayName: c_str,
+    stackingState: bool,
+) callconv(.C) void {
+    return @call(
+        .never_inline,
+        zigAddSpellActive,
+        .{ pid, spellId, displayName, stackingState },
+    );
+}
+pub export fn impl_DoesSpellsActiveHavePlayerCaster(
+    pid: c_ushort,
+    index: c_uint,
+) callconv(.C) bool {
+    return @call(.never_inline, zigDoesSpellsActiveHavePlayerCaster, .{ pid, index });
+}
+pub export fn impl_GetSpellsActiveCasterPid(pid: c_ushort, index: c_uint) callconv(.C) c_int {
+    return @call(.never_inline, zigGetSpellsActiveCasterPid, .{ pid, index });
+}
+pub export fn impl_GetSpellsActiveCasterRefId(pid: c_ushort, index: c_uint) callconv(.C) c_str {
+    return @call(.never_inline, zigGetSpellsActiveCasterRefId, .{ pid, index });
+}
+pub export fn impl_GetSpellsActiveCasterRefNum(pid: c_ushort, index: c_uint) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetSpellsActiveCasterRefNum, .{ pid, index });
+}
+pub export fn impl_GetSpellsActiveCasterMpNum(pid: c_ushort, index: c_uint) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetSpellsActiveCasterMpNum, .{ pid, index });
+}
+pub export fn impl_SendSpellsActiveChanges(
+    pid: c_ushort,
+    sendToOtherPlayers: bool,
+    skipAttachedPlayer: bool,
+) callconv(.C) void {
+    return @call(
+        .never_inline,
+        zigSendSpellsActiveChanges,
+        .{ pid, sendToOtherPlayers, skipAttachedPlayer },
+    );
+}
+pub export fn impl_ClearCooldownChanges(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigClearCooldownChanges, .{pid});
+}
+pub export fn impl_GetCooldownChangesSize(pid: c_ushort) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetCooldownChangesSize, .{pid});
+}
+pub export fn impl_GetCooldownSpellId(pid: c_ushort, index: c_uint) callconv(.C) c_str {
+    return @call(.never_inline, zigGetCooldownSpellId, .{ pid, index });
+}
+pub export fn impl_GetCooldownStartDay(pid: c_ushort, index: c_uint) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetCooldownStartDay, .{ pid, index });
+}
+pub export fn impl_GetCooldownStartHour(pid: c_ushort, index: c_uint) callconv(.C) f64 {
+    return @call(.never_inline, zigGetCooldownStartHour, .{ pid, index });
+}
+pub export fn impl_AddCooldownSpell(
+    pid: c_ushort,
+    spellId: c_str,
+    startDay: c_uint,
+    startHour: f64,
+) callconv(.C) void {
+    return @call(.never_inline, zigAddCooldownSpell, .{ pid, spellId, startDay, startHour });
+}
+pub export fn impl_SendCooldownChanges(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigSendCooldownChanges, .{pid});
+}
+pub export fn impl_GetSpellsActiveEffectCount(pid: c_ushort, index: c_uint) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetSpellsActiveEffectCount, .{ pid, index });
+}
+pub export fn impl_GetSpellsActiveEffectId(
+    pid: c_ushort,
+    spellIndex: c_uint,
+    effectIndex: c_uint,
+) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetSpellsActiveEffectId, .{ pid, spellIndex, effectIndex });
+}
+pub export fn impl_GetSpellsActiveEffectArg(
+    pid: c_ushort,
+    spellIndex: c_uint,
+    effectIndex: c_uint,
+) callconv(.C) c_int {
+    return @call(.never_inline, zigGetSpellsActiveEffectArg, .{ pid, spellIndex, effectIndex });
+}
+pub export fn impl_GetSpellsActiveEffectMagnitude(
+    pid: c_ushort,
+    spellIndex: c_uint,
+    effectIndex: c_uint,
+) callconv(.C) f64 {
+    return @call(
+        .never_inline,
+        zigGetSpellsActiveEffectMagnitude,
+        .{ pid, spellIndex, effectIndex },
+    );
+}
+pub export fn impl_GetSpellsActiveEffectDuration(
+    pid: c_ushort,
+    spellIndex: c_uint,
+    effectIndex: c_uint,
+) callconv(.C) f64 {
+    return @call(
+        .never_inline,
+        zigGetSpellsActiveEffectDuration,
+        .{ pid, spellIndex, effectIndex },
+    );
+}
+pub export fn impl_GetSpellsActiveEffectTimeLeft(
+    pid: c_ushort,
+    spellIndex: c_uint,
+    effectIndex: c_uint,
+) callconv(.C) f64 {
+    return @call(
+        .never_inline,
+        zigGetSpellsActiveEffectTimeLeft,
+        .{ pid, spellIndex, effectIndex },
+    );
+}
+pub export fn impl_AddSpellActiveEffect(
+    pid: c_ushort,
+    effectId: c_int,
+    magnitude: f64,
+    duration: f64,
+    timeLeft: f64,
+    arg: c_int,
+) callconv(.C) void {
+    return @call(
+        .never_inline,
+        zigAddSpellActiveEffect,
+        .{ pid, effectId, magnitude, duration, timeLeft, arg },
+    );
+}

@@ -25,7 +25,7 @@ pub export var zigHasItemEquipped: *const fn (c_ushort, c_str) callconv(.C) bool
 pub export var zigSendEquipment: *const fn (c_ushort) callconv(.C) void = &binding.ub_fn_ushort;
 
 // Inventory functions
-pub export var zigGetInventoryItemRefId: *const fn (c_ushort, c_ushort) callconv(.C) c_str = &binding.ub_fn_2ushort;
+pub export var zigGetInventoryItemRefId: *const fn (c_ushort, c_uint) callconv(.C) c_str = &binding.ub_fn_ushort_uint;
 pub export var zigGetInventoryItemCount: *const fn (c_ushort, c_uint) callconv(.C) c_int = &binding.ub_fn_ushort_uint;
 pub export var zigGetInventoryItemCharge: *const fn (c_ushort, c_uint) callconv(.C) c_int = &binding.ub_fn_ushort_uint;
 pub export var zigGetInventoryItemEnchantmentCharge: *const fn (c_ushort, c_uint) callconv(.C) f64 = &binding.ub_fn_ushort_uint;
@@ -41,3 +41,124 @@ pub export var zigSendItemUse: *const fn (c_ushort) callconv(.C) void = &binding
 
 // Misc functions
 pub export var zigGetEquipmentSize: *const fn () callconv(.C) c_int = &binding.ub_fn; // Returns 19 in TES3MP 0.8.1
+
+pub export fn impl_ClearInventoryChanges(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigClearInventoryChanges, .{pid});
+}
+pub export fn impl_GetEquipmentChangesSize(pid: c_ushort) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetEquipmentChangesSize, .{pid});
+}
+pub export fn impl_GetInventoryChangesSize(pid: c_ushort) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetInventoryChangesSize, .{pid});
+}
+pub export fn impl_GetInventoryChangesAction(pid: c_ushort) callconv(.C) c_uint {
+    return @call(.never_inline, zigGetInventoryChangesAction, .{pid});
+}
+pub export fn impl_SetInventoryChangesAction(pid: c_ushort, action: u8) callconv(.C) void {
+    return @call(.never_inline, zigSetInventoryChangesAction, .{ pid, action });
+}
+pub export fn impl_AddItemChange(
+    pid: c_ushort,
+    refId: c_str,
+    count: c_uint,
+    charge: c_int,
+    enchantmentCharge: f64,
+    soul: c_str,
+) callconv(.C) void {
+    return @call(
+        .never_inline,
+        zigAddItemChange,
+        .{ pid, refId, count, charge, enchantmentCharge, soul },
+    );
+}
+pub export fn impl_GetEquipmentChangesSlot(pid: c_ushort, changeIndex: c_uint) callconv(.C) c_int {
+    return @call(.never_inline, zigGetEquipmentChangesSlot, .{ pid, changeIndex });
+}
+pub export fn impl_SendInventoryChanges(
+    pid: c_ushort,
+    sendToOtherPlayers: bool,
+    skipAttachedPlayer: bool,
+) callconv(.C) void {
+    return @call(
+        .never_inline,
+        zigSendInventoryChanges,
+        .{ pid, sendToOtherPlayers, skipAttachedPlayer },
+    );
+}
+pub export fn impl_GetEquipmentItemRefId(pid: c_ushort, slot: c_ushort) callconv(.C) c_str {
+    return @call(.never_inline, zigGetEquipmentItemRefId, .{ pid, slot });
+}
+pub export fn impl_GetEquipmentItemCount(pid: c_ushort, slot: c_ushort) callconv(.C) c_int {
+    return @call(.never_inline, zigGetEquipmentItemCount, .{ pid, slot });
+}
+pub export fn impl_GetEquipmentItemCharge(pid: c_ushort, slot: c_ushort) callconv(.C) c_int {
+    return @call(.never_inline, zigGetEquipmentItemCharge, .{ pid, slot });
+}
+pub export fn impl_GetEquipmentItemEnchantmentCharge(
+    pid: c_ushort,
+    slot: c_ushort,
+) callconv(.C) f64 {
+    return @call(.never_inline, zigGetEquipmentItemEnchantmentCharge, .{ pid, slot });
+}
+pub export fn impl_EquipItem(
+    pid: c_ushort,
+    slot: c_ushort,
+    refId: c_str,
+    count: c_uint,
+    charge: c_int,
+    enchantmentCharge: f64,
+) callconv(.C) void {
+    return @call(
+        .never_inline,
+        zigEquipItem,
+        .{ pid, slot, refId, count, charge, enchantmentCharge },
+    );
+}
+pub export fn impl_UnequipItem(pid: c_ushort, slot: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigUnequipItem, .{ pid, slot });
+}
+pub export fn impl_HasItemEquipped(pid: c_ushort, refId: c_str) callconv(.C) bool {
+    return @call(.never_inline, zigHasItemEquipped, .{ pid, refId });
+}
+pub export fn impl_SendEquipment(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigSendEquipment, .{pid});
+}
+pub export fn impl_GetInventoryItemRefId(pid: c_ushort, index: c_uint) callconv(.C) c_str {
+    return @call(.never_inline, zigGetInventoryItemRefId, .{ pid, index });
+}
+pub export fn impl_GetInventoryItemCount(pid: c_ushort, index: c_uint) callconv(.C) c_int {
+    return @call(.never_inline, zigGetInventoryItemCount, .{ pid, index });
+}
+pub export fn impl_GetInventoryItemCharge(pid: c_ushort, index: c_uint) callconv(.C) c_int {
+    return @call(.never_inline, zigGetInventoryItemCharge, .{ pid, index });
+}
+pub export fn impl_GetInventoryItemEnchantmentCharge(
+    pid: c_ushort,
+    index: c_uint,
+) callconv(.C) f64 {
+    return @call(.never_inline, zigGetInventoryItemEnchantmentCharge, .{ pid, index });
+}
+pub export fn impl_GetInventoryItemSoul(pid: c_ushort, index: c_uint) callconv(.C) c_str {
+    return @call(.never_inline, zigGetInventoryItemSoul, .{ pid, index });
+}
+pub export fn impl_GetUsedItemRefId(pid: c_ushort) callconv(.C) c_str {
+    return @call(.never_inline, zigGetUsedItemRefId, .{pid});
+}
+pub export fn impl_GetUsedItemCount(pid: c_ushort) callconv(.C) c_int {
+    return @call(.never_inline, zigGetUsedItemCount, .{pid});
+}
+pub export fn impl_GetUsedItemCharge(pid: c_ushort) callconv(.C) c_int {
+    return @call(.never_inline, zigGetUsedItemCharge, .{pid});
+}
+pub export fn impl_GetUsedItemEnchantmentCharge(pid: c_ushort) callconv(.C) f64 {
+    return @call(.never_inline, zigGetUsedItemEnchantmentCharge, .{pid});
+}
+pub export fn impl_GetUsedItemSoul(pid: c_ushort) callconv(.C) c_str {
+    return @call(.never_inline, zigGetUsedItemSoul, .{pid});
+}
+pub export fn impl_SendItemUse(pid: c_ushort) callconv(.C) void {
+    return @call(.never_inline, zigSendItemUse, .{pid});
+}
+pub export fn impl_GetEquipmentSize() callconv(.C) c_int {
+    return @call(.never_inline, zigGetEquipmentSize, .{});
+}
