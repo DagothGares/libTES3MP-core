@@ -7,7 +7,7 @@ const c_str = binding.c_str;
 pub export var zigClearBookChanges: *const fn (c_ushort) callconv(.C) void = &binding.ub_fn_ushort;
 pub export var zigGetBookChangesSize: *const fn (c_ushort) callconv(.C) c_uint = &binding.ub_fn_ushort;
 pub export var zigAddBook: *const fn (c_ushort, c_str) callconv(.C) void = &binding.ub_fn_ushort_str;
-pub export var zigGetBookId: *const fn (c_ushort, c_uint) callconv(.C) void = &binding.ub_fn_ushort_uint;
+pub export var zigGetBookId: *const fn (c_ushort, c_uint) callconv(.C) c_str = &binding.ub_fn_ushort_uint;
 pub export var zigSendBookChanges: *const fn (c_ushort, bool, bool) callconv(.C) void = &binding.ub_fn_ushort_2bool;
 
 pub export fn impl_ClearBookChanges(pid: c_ushort) callconv(.C) void {
@@ -19,7 +19,7 @@ pub export fn impl_GetBookChangesSize(pid: c_ushort) callconv(.C) c_uint {
 pub export fn impl_AddBook(pid: c_ushort, bookId: c_str) callconv(.C) void {
     return @call(.never_inline, zigAddBook, .{ pid, bookId });
 }
-pub export fn impl_GetBookId(pid: c_ushort, index: c_uint) callconv(.C) void {
+pub export fn impl_GetBookId(pid: c_ushort, index: c_uint) callconv(.C) c_str {
     return @call(.never_inline, zigGetBookId, .{ pid, index });
 }
 pub export fn impl_SendBookChanges(

@@ -32,7 +32,7 @@ const Status = event.Status;
 const c_str = binding.c_str;
 
 fn showInitialized(status: Status) void {
-    if (@enumToInt(status) & @enumToInt(Status.Default) != 0) {
+    if (@intFromEnum(status) & @intFromEnum(Status.Default) != 0) {
         binding.server.zigLogMessage(1, "libTES3MP-core: Initialized.");
     }
 }
@@ -123,7 +123,7 @@ pub const Events = struct {
     pub const OnObjectTrapEvent = Event(fn (c_ushort, c_str) void, "OnObjectTrap", .UnsignedShort_String, null, null);
 
     pub const OnActorListEvent = Event(fn (c_ushort, c_str) void, "OnActorList", .UnsignedShort_String, null, null);
-    pub const OnActorAIEvent = Event(fn (c_ushort, c_str) void, "OnActorList", .UnsignedShort_String, null, null);
+    pub const OnActorAIEvent = Event(fn (c_ushort, c_str) void, "OnActorAI", .UnsignedShort_String, null, null);
     pub const OnActorDeathEvent = Event(fn (c_ushort, c_str) void, "OnActorDeath", .UnsignedShort_String, null, null);
     pub const OnActorSpellsActiveEvent = Event(fn (c_ushort, c_str) void, "OnActorSpellsActive", .UnsignedShort_String, null, null);
     pub const OnActorCellChangeEvent = Event(fn (c_ushort, c_str) void, "OnActorCellChange", .UnsignedShort_String, null, null);
@@ -140,7 +140,7 @@ pub const Events = struct {
 // std.testing.refAllDeclsRecursive can't be used here, because Zig won't execute the recursive
 // call, since we're not in a test. I'm not sure if that could be considered a bug.
 comptime {
-    _ = binding.prefix;
+    std.testing.refAllDecls(binding);
     std.testing.refAllDecls(binding.actors);
     std.testing.refAllDecls(binding.books);
     std.testing.refAllDecls(binding.cells);

@@ -11,7 +11,7 @@ pub export var zigSetFactionRank: *const fn (c_uint) callconv(.C) void = &bindin
 pub export var zigGetFactionExpulsionState: *const fn (c_ushort, c_uint) callconv(.C) bool = &binding.ub_fn_ushort_uint;
 pub export var zigSetFactionExpulsionState: *const fn (bool) callconv(.C) void = &binding.ub_fn_bool;
 pub export var zigGetFactionReputation: *const fn (c_ushort, c_uint) callconv(.C) c_int = &binding.ub_fn_ushort_uint;
-pub export var zigSetFactionReputation: *const fn (c_ushort) callconv(.C) void = &binding.ub_fn_ushort;
+pub export var zigSetFactionReputation: *const fn (c_int) callconv(.C) void = &binding.ub_fn_int;
 pub export var zigAddFaction: *const fn (c_ushort) callconv(.C) void = &binding.ub_fn_ushort;
 
 // FactionChanges functions
@@ -42,8 +42,8 @@ pub export fn impl_SetFactionExpulsionState(expulsionState: bool) callconv(.C) v
 pub export fn impl_GetFactionReputation(pid: c_ushort, index: c_uint) callconv(.C) c_int {
     return @call(.never_inline, zigGetFactionReputation, .{ pid, index });
 }
-pub export fn impl_SetFactionReputation(pid: c_ushort) callconv(.C) void {
-    return @call(.never_inline, zigSetFactionReputation, .{pid});
+pub export fn impl_SetFactionReputation(reputation: c_int) callconv(.C) void {
+    return @call(.never_inline, zigSetFactionReputation, .{reputation});
 }
 pub export fn impl_AddFaction(pid: c_ushort) callconv(.C) void {
     return @call(.never_inline, zigAddFaction, .{pid});

@@ -85,7 +85,7 @@ pub fn Event(
                 // Status, we can provide helpful info instead of defaulting back to enabling
                 // everything
                 status = std.meta.intToEnum(Status, cb(
-                    @enumToInt(status),
+                    @intFromEnum(status),
                 )) catch Status.All;
             }
 
@@ -98,7 +98,7 @@ pub fn Event(
             for (callbacks.items) |cb| {
                 status = std.meta.intToEnum(
                     Status,
-                    cb(@enumToInt(status), boolean),
+                    cb(@intFromEnum(status), boolean),
                 ) catch Status.All;
             }
 
@@ -111,7 +111,7 @@ pub fn Event(
             for (callbacks.items) |cb| {
                 status = std.meta.intToEnum(
                     Status,
-                    cb(@enumToInt(status), ushort),
+                    cb(@intFromEnum(status), ushort),
                 ) catch Status.All;
             }
 
@@ -122,7 +122,7 @@ pub fn Event(
             var status: Status = if (pre_callback) |cb| cb(int) else Status.All;
 
             for (callbacks.items) |cb| {
-                status = std.meta.intToEnum(Status, cb(@enumToInt(status), int)) catch Status.All;
+                status = std.meta.intToEnum(Status, cb(@intFromEnum(status), int)) catch Status.All;
             }
 
             if (post_callback) |cb| cb(status, int);
@@ -134,7 +134,7 @@ pub fn Event(
             for (callbacks.items) |cb| {
                 status = std.meta.intToEnum(
                     Status,
-                    cb(@enumToInt(status), str),
+                    cb(@intFromEnum(status), str),
                 ) catch Status.All;
             }
 
@@ -147,7 +147,7 @@ pub fn Event(
             for (callbacks.items) |cb| {
                 status = std.meta.intToEnum(
                     Status,
-                    cb(@enumToInt(status), ushort, str),
+                    cb(@intFromEnum(status), ushort, str),
                 ) catch Status.All;
             }
 
@@ -160,7 +160,7 @@ pub fn Event(
             for (callbacks.items) |cb| {
                 status = std.meta.intToEnum(
                     Status,
-                    cb(@enumToInt(status), ushort, int, str),
+                    cb(@intFromEnum(status), ushort, int, str),
                 ) catch Status.All;
             }
 
