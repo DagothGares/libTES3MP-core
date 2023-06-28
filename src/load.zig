@@ -121,13 +121,9 @@ pub fn init() Status {
             break;
         }
 
-        server.zigLogMessage(4, "libTES3MP-core: Here 1");
-
         switch (next) {
             .allocated_string => |path| {
                 defer allocator.free(path);
-
-                server.zigLogMessage(4, "libTES3MP-core: Here 2");
 
                 const prefix = "./server/scripts/custom/";
                 const full_length = prefix.len + path.len;
@@ -155,14 +151,10 @@ pub fn init() Status {
                 }
                 var path_buffer: [std.fs.MAX_PATH_BYTES]u8 = undefined;
 
-                server.zigLogMessage(4, "libTES3MP-core: Here 3");
-
                 @memcpy(path_buffer[0..prefix.len], prefix);
                 @memcpy(path_buffer[prefix.len .. prefix.len + path.len], path);
                 path_buffer[full_length] = 0;
                 const full_path = path_buffer[0..full_length :0];
-
-                server.zigLogMessage(4, "libTES3MP-core: Here 4");
 
                 // I can't be bothered inlining wToPrefixedFileW a second time, especially not for
                 // user-input strings
@@ -190,8 +182,6 @@ pub fn init() Status {
                 //    },
                 //};
 
-                server.zigLogMessage(4, "libTES3MP-core: Here 5");
-
                 const libmain: *const fn () callconv(.C) void = library.lookup(
                     *const fn () callconv(.C) void,
                     "libmain",
@@ -207,11 +197,7 @@ pub fn init() Status {
                     continue;
                 };
 
-                server.zigLogMessage(4, "libTES3MP-core: Here 6");
-
                 libmain();
-
-                server.zigLogMessage(4, "libTES3MP-core: Here 7");
 
                 // We can't close the library when we might have its function pointers bound to an
                 // Event.
@@ -231,8 +217,6 @@ pub fn init() Status {
                         return Status.None;
                     },
                 };
-
-                server.zigLogMessage(4, "libTES3MP-core: Here 8");
             },
             .array_end => break,
             // need to free the allocation
@@ -276,8 +260,6 @@ pub fn init() Status {
             return Status.None;
         },
     }
-
-    server.zigLogMessage(4, "libTES3MP-core: Here 9");
 
     return Status.All;
 }
