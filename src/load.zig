@@ -21,10 +21,14 @@ pub fn unloadLibraries() void {
 
 const windows = std.os.windows;
 extern "kernel32" fn AttachConsole(dwProcessId: windows.DWORD) callconv(windows.WINAPI) windows.BOOL;
-extern "kernel32" fn LoadLibraryA(lpLibFileName: windows.LPCSTR) callconv(windows.WINAPI) ?windows.HMODULE;
 
 pub fn init() Status {
-    // undo TES3MP fucking up StdErr
+    server.zigLogMessage(
+        1,
+        "libTES3MP-core: Version 0.1.0, compiled in " ++
+            @tagName(builtin.mode) ++ " mode.",
+    );
+    // undo TES3MP hiding StdErr
     const attached = AttachConsole(@bitCast(@as(i32, -1)));
     if (attached != 0) {
         server.zigLogMessage(4, "libTES3MP-core: Could not attach to console window");
@@ -33,53 +37,71 @@ pub fn init() Status {
 
         return Status.None;
     }
-    //
     var arena = std.heap.ArenaAllocator.init(g_alloc);
     defer arena.deinit();
     var allocator = arena.allocator();
 
     const cwd = std.fs.cwd();
 
-    // std.os.windows.wToPrefixedFileW causes a segfault here, even though inlining it is fine???
-    var path_space: windows.PathSpace = undefined;
-    {
-        const temp = std.unicode.utf8ToUtf16LeStringLiteral(".\\server\\data\\libraries.json");
+    // TODO: put this back to openFile once windows.wToPrefixedFileW starts behaving again
+    var libraries_file = blk: {
+        if (builtin.os.tag == .windows) {
+            var path_space: windows.PathSpace = undefined;
+            {
+                const temp = std.unicode.utf8ToUtf16LeStringLiteral(
+                    ".\\server\\data\\libraries.json",
+                );
 
-        @memcpy(path_space.data[0..temp.len], temp);
-        path_space.len = windows.normalizePath(u16, path_space.data[0..temp.len]) catch unreachable;
-        path_space.data[path_space.len] = 0;
+                @memcpy(path_space.data[0..temp.len], temp);
+                path_space.len = windows.normalizePath(u16, path_space.data[0..temp.len]) catch {
+                    unreachable;
+                };
+                path_space.data[path_space.len] = 0;
 
-        const nt_prefix = [_]u16{ '\\', '?', '?', '\\' };
-        path_space.data[0..nt_prefix.len].* = nt_prefix;
+                const nt_prefix = [_]u16{ '\\', '?', '?', '\\' };
+                path_space.data[0..nt_prefix.len].* = nt_prefix;
 
-        const buf_len = @as(u32, @intCast(path_space.data.len - 4));
-        const len = windows.ntdll.RtlGetFullPathName_U(
-            temp,
-            buf_len * 2,
-            path_space.data[4..].ptr,
-            null,
-        );
+                const buf_len = @as(u32, @intCast(path_space.data.len - 4));
+                const len = windows.ntdll.RtlGetFullPathName_U(
+                    temp,
+                    buf_len * 2,
+                    path_space.data[4..].ptr,
+                    null,
+                );
 
-        if (len == 0) {
-            unreachable;
-        } else if (len / 2 > buf_len) {
-            unreachable;
-        }
-        path_space.len = 4 + (len / 2);
-    }
+                if (len == 0) {
+                    unreachable;
+                } else if (len / 2 > buf_len) {
+                    unreachable;
+                }
+                path_space.len = 4 + (len / 2);
+            }
+            break :blk cwd.openFileW(path_space.span(), .{}) catch |err| switch (err) {
+                inline else => |e| {
+                    server.zigLogMessage(
+                        4,
+                        "libTES3MP-core: Could not open ./server/data/libraries.json: " ++
+                            @errorName(e),
+                    );
 
-    // TODO: put this back to openFile once wToPrefixedFileW starts behaving again
-    var libraries_file = cwd.openFileW(path_space.span(), .{}) catch |err| switch (err) {
-        inline else => |e| {
-            server.zigLogMessage(
-                4,
-                "libTES3MP-core: Could not open ./server/data/libraries.json: " ++ @errorName(e),
-            );
+                    server.zigStopServer(1);
 
-            server.zigStopServer(1);
+                    return Status.None;
+                },
+            };
+        } else break :blk cwd.openFile("./server/data/libraries.json") catch |err| switch (err) {
+            inline else => |e| {
+                server.zigLogMessage(
+                    4,
+                    "libTES3MP-core: Could not open ./server/data/libraries.json: " ++
+                        @errorName(e),
+                );
 
-            return Status.None;
-        },
+                server.zigStopServer(1);
+
+                return Status.None;
+            },
+        };
     };
     defer libraries_file.close();
 
@@ -126,61 +148,140 @@ pub fn init() Status {
                 defer allocator.free(path);
 
                 const prefix = "./server/scripts/custom/";
-                const full_length = prefix.len + path.len;
-                if (full_length > std.fs.MAX_PATH_BYTES) {
-                    // I dunno if StopServer is noreturn or not.
-                    defer server.zigStopServer(1);
 
-                    var err_buff: [48 * 1024]u8 = undefined;
-                    server.zigLogMessage(4, std.fmt.bufPrintZ(
-                        &err_buff,
-                        "libTES3MP-core: Could not open external library " ++
-                            prefix ++
-                            "{s}: path longer than maximum allowed",
-                        .{path},
-                    ) catch {
-                        server.zigLogMessage(
-                            4,
-                            "libTES3MP-core: libraries.json contains absurdly long entry",
-                        );
+                var library = blk: {
+                    const full_length = prefix.len + path.len;
+                    if (full_length > std.fs.MAX_PATH_BYTES) {
+                        defer server.zigStopServer(1);
+
+                        var err_buff: [48 * 1024]u8 = undefined;
+                        server.zigLogMessage(4, std.fmt.bufPrintZ(
+                            &err_buff,
+                            "libTES3MP-core: Could not open external library " ++
+                                prefix ++
+                                "{s}: path longer than maximum allowed",
+                            .{path},
+                        ) catch {
+                            server.zigLogMessage(
+                                4,
+                                "libTES3MP-core: libraries.json contains absurdly long entry",
+                            );
+
+                            return Status.None;
+                        });
 
                         return Status.None;
-                    });
+                    }
+                    var path_buffer: [std.fs.MAX_PATH_BYTES]u8 = undefined;
 
-                    return Status.None;
-                }
-                var path_buffer: [std.fs.MAX_PATH_BYTES]u8 = undefined;
+                    @memcpy(path_buffer[0..prefix.len], prefix);
+                    @memcpy(path_buffer[prefix.len .. prefix.len + path.len], path);
+                    path_buffer[full_length] = 0;
+                    const full_path = path_buffer[0..full_length :0];
+                    if (builtin.os.tag == .windows) {
+                        // sliceToPrefixedFileW
 
-                @memcpy(path_buffer[0..prefix.len], prefix);
-                @memcpy(path_buffer[prefix.len .. prefix.len + path.len], path);
-                path_buffer[full_length] = 0;
-                const full_path = path_buffer[0..full_length :0];
+                        var path_u16: windows.PathSpace = undefined;
+                        path_u16.len = std.unicode.utf8ToUtf16Le(
+                            &path_u16.data,
+                            full_path,
+                        ) catch |err| switch (err) {
+                            inline else => |e| {
+                                var err_buf: [48 * 1024]u8 = undefined;
+                                server.zigLogMessage(4, std.fmt.bufPrintZ(
+                                    &err_buf,
+                                    "libTES3MP-core: Could not open external library " ++
+                                        prefix ++ "{s}: " ++ @errorName(e),
+                                    .{path},
+                                ) catch unreachable);
 
-                // I can't be bothered inlining wToPrefixedFileW a second time, especially not for
-                // user-input strings
-                var library = std.DynLib{ .dll = LoadLibraryA(full_path) orelse {
-                    server.zigLogMessage(4, "libTES3MP-core: LoadLibraryA returned null");
+                                server.zigStopServer(1);
 
-                    server.zigStopServer(1);
+                                return Status.None;
+                            },
+                        };
+                        path_u16.data[path_u16.len] = 0;
 
-                    return Status.None;
-                } };
+                        // wToPrefixedFileW
 
-                //var library = std.DynLib.open(full_path) catch |err| switch (err) {
-                //    inline else => |e| {
-                //        var err_buff: [48 * 1024]u8 = undefined;
-                //        server.zigLogMessage(4, std.fmt.bufPrintZ(
-                //            &err_buff,
-                //            "libTES3MP-core: Could not open external library " ++
-                //                prefix ++ "{s}: " ++ @errorName(e),
-                //            .{path},
-                //        ) catch unreachable);
+                        var path_space: windows.PathSpace = undefined;
+                        @memcpy(path_space.data[0..path_u16.len], path_u16.span());
 
-                //        server.zigStopServer(1);
+                        path_space.len = windows.normalizePath(
+                            u16,
+                            path_space.data[0..path_u16.len],
+                        ) catch unreachable;
+                        path_space.data[path_space.len] = 0;
 
-                //        return Status.None;
-                //    },
-                //};
+                        const nt_prefix = [_]u16{ '\\', '?', '?', '\\' };
+                        path_space.data[0..nt_prefix.len].* = nt_prefix;
+
+                        const buf_len: u32 = @intCast(path_space.data.len - 4);
+                        const len = windows.ntdll.RtlGetFullPathName_U(
+                            &path_u16.data,
+                            buf_len * 2,
+                            path_space.data[4..].ptr,
+                            null,
+                        );
+
+                        if (len == 0) {
+                            var err_buf: [48 * 1024]u8 = undefined;
+                            server.zigLogMessage(4, std.fmt.bufPrintZ(
+                                &err_buf,
+                                "libTES3MP-core: Could not open external library " ++
+                                    prefix ++ "{s}: BadPathName",
+                                .{path},
+                            ) catch unreachable);
+
+                            server.zigStopServer(1);
+
+                            return Status.None;
+                        } else if (len / 2 > buf_len) {
+                            var err_buf: [48 * 1024]u8 = undefined;
+                            server.zigLogMessage(4, std.fmt.bufPrintZ(
+                                &err_buf,
+                                "libTES3MP-core: Could not open external library " ++
+                                    prefix ++ "{s}: NameTooLong",
+                                .{path},
+                            ) catch unreachable);
+
+                            server.zigStopServer(1);
+
+                            return Status.None;
+                        }
+                        path_space.len = 4 + (len / 2);
+
+                        break :blk std.DynLib.openW(path_space.span()) catch |err| switch (err) {
+                            inline else => |e| {
+                                var err_buf: [48 * 1024]u8 = undefined;
+                                server.zigLogMessage(4, std.fmt.bufPrintZ(
+                                    &err_buf,
+                                    "libTES3MP-core: Could not open external library " ++
+                                        prefix ++ "{s}: " ++ @errorName(e),
+                                    .{path},
+                                ) catch unreachable);
+
+                                server.zigStopServer(1);
+
+                                return Status.None;
+                            },
+                        };
+                    } else break :blk std.DynLib.open(full_path) catch |err| switch (err) {
+                        inline else => |e| {
+                            var err_buff: [48 * 1024]u8 = undefined;
+                            server.zigLogMessage(4, std.fmt.bufPrintZ(
+                                &err_buff,
+                                "libTES3MP-core: Could not open external library " ++
+                                    prefix ++ "{s}: " ++ @errorName(e),
+                                .{path},
+                            ) catch unreachable);
+
+                            server.zigStopServer(1);
+
+                            return Status.None;
+                        },
+                    };
+                };
 
                 const libmain: *const fn () callconv(.C) void = library.lookup(
                     *const fn () callconv(.C) void,
