@@ -28,14 +28,16 @@ pub fn init() Status {
         "libTES3MP-core: Version 0.1.0, compiled in " ++
             @tagName(builtin.mode) ++ " mode.",
     );
-    // undo TES3MP hiding StdErr
-    const attached = AttachConsole(@bitCast(@as(i32, -1)));
-    if (attached != 0) {
-        server.zigLogMessage(4, "libTES3MP-core: Could not attach to console window");
+    // undo TES3MP hiding StdErr, which causes weirdness on windows
+    if (builtin.os.tag == .windows) {
+        const attached = AttachConsole(@bitCast(@as(i32, -1)));
+        if (attached != 0) {
+            server.zigLogMessage(4, "libTES3MP-core: Could not attach to console window");
 
-        server.zigStopServer(1);
+            server.zigStopServer(1);
 
-        return Status.None;
+            return Status.None;
+        }
     }
     var arena = std.heap.ArenaAllocator.init(g_alloc);
     defer arena.deinit();
