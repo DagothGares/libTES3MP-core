@@ -7,28 +7,21 @@ const std = @import("std");
 const builtin = @import("builtin");
 const binding = @import("../binding.zig");
 
-const c_str = binding.c_str;
 const ForeignFunction = binding.ForeignFunction;
 const va_list = binding.va_list;
 
-pub export var zigCreateTimer: *const fn (*const ForeignFunction, c_int) callconv(.C) c_int = &binding.ub_fn_fptrva_int;
-pub export var zigCreateTimerEx: *const fn (*const ForeignFunction, c_int, c_str, ?va_list) callconv(.C) c_int = &binding.ub_fn_fptrva_int_str_va;
-pub export var zigStartTimer: *const fn (c_int) callconv(.C) void = &binding.ub_fn_int;
-pub export var zigStopTimer: *const fn (c_int) callconv(.C) void = &binding.ub_fn_int;
-pub export var zigRestartTimer: *const fn (c_int, c_int) callconv(.C) void = &binding.ub_fn_2int;
-pub export var zigFreeTimer: *const fn (c_int) callconv(.C) void = &binding.ub_fn_int;
-pub export var zigIsTimerElapsed: *const fn (c_int) callconv(.C) bool = &binding.ub_fn_int;
+pub export var zigCreateTimer: *const fn (callback: *const ForeignFunction, msec: c_int) callconv(.C) c_int = &binding.ub_fn_fptrva_int;
+pub export var zigCreateTimerEx: *const fn (callback: *const ForeignFunction, msec: c_int, types: [*:0]const u8, args: ?va_list) callconv(.C) c_int = &binding.ub_fn_fptrva_int_str_va;
+pub export var zigStartTimer: *const fn (timerId: c_int) callconv(.C) void = &binding.ub_fn_int;
+pub export var zigStopTimer: *const fn (timerId: c_int) callconv(.C) void = &binding.ub_fn_int;
+pub export var zigRestartTimer: *const fn (timerId: c_int, msec: c_int) callconv(.C) void = &binding.ub_fn_2int;
+pub export var zigFreeTimer: *const fn (timerId: c_int) callconv(.C) void = &binding.ub_fn_int;
+pub export var zigIsTimerElapsed: *const fn (timerId: c_int) callconv(.C) bool = &binding.ub_fn_int;
 
 pub export fn impl_CreateTimer(callback: *const ForeignFunction, msec: c_int) callconv(.C) c_int {
     return @call(.never_inline, zigCreateTimer, .{ callback, msec });
 }
-/// Your mileage may vary when calling this function, especially on Windows.
-pub export fn impl_CreateTimerEx(
-    callback: *const ForeignFunction,
-    msec: c_int,
-    types: c_str,
-    args: ?va_list,
-) callconv(.C) c_int {
+pub export fn impl_CreateTimerEx(callback: *const ForeignFunction, msec: c_int, types: [*:0]const u8, args: ?va_list) callconv(.C) c_int {
     return @call(.never_inline, zigCreateTimerEx, .{ callback, msec, types, args });
 }
 pub export fn impl_StartTimer(timerId: c_int) callconv(.C) void {

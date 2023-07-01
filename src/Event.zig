@@ -7,8 +7,6 @@ const Param = std.builtin.Type.Fn.Param;
 
 const g_alloc = @import("main.zig").allocator;
 
-const c_str = binding.c_str;
-
 pub const Status = enum(u8) {
     None = 0,
     Default = 1,
@@ -122,13 +120,16 @@ pub fn Event(
             var status: Status = if (pre_callback) |cb| cb(int) else Status.All;
 
             for (callbacks.items) |cb| {
-                status = std.meta.intToEnum(Status, cb(@intFromEnum(status), int)) catch Status.All;
+                status = std.meta.intToEnum(
+                    Status,
+                    cb(@intFromEnum(status), int),
+                ) catch Status.All;
             }
 
             if (post_callback) |cb| cb(status, int);
         }
 
-        fn trigger_str(str: c_str) callconv(.C) void {
+        fn trigger_str(str: [*:0]const u8) callconv(.C) void {
             var status: Status = if (pre_callback) |cb| cb(str) else Status.All;
 
             for (callbacks.items) |cb| {
@@ -141,7 +142,7 @@ pub fn Event(
             if (post_callback) |cb| cb(status, str);
         }
 
-        fn trigger_ushort_str(ushort: c_ushort, str: c_str) callconv(.C) void {
+        fn trigger_ushort_str(ushort: c_ushort, str: [*:0]const u8) callconv(.C) void {
             var status: Status = if (pre_callback) |cb| cb(ushort, str) else Status.All;
 
             for (callbacks.items) |cb| {
@@ -154,7 +155,11 @@ pub fn Event(
             if (post_callback) |cb| cb(status, ushort, str);
         }
 
-        fn trigger_ushort_int_str(ushort: c_ushort, int: c_int, str: c_str) callconv(.C) void {
+        fn trigger_ushort_int_str(
+            ushort: c_ushort,
+            int: c_int,
+            str: [*:0]const u8,
+        ) callconv(.C) void {
             var status: Status = if (pre_callback) |cb| cb(ushort, int, str) else Status.All;
 
             for (callbacks.items) |cb| {
