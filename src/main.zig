@@ -155,7 +155,7 @@ comptime {
     std.testing.refAllDecls(binding.object);
     std.testing.refAllDecls(binding.position);
     std.testing.refAllDecls(binding.quest);
-    std.testing.refAllDecls(binding.records_dynamic);
+    std.testing.refAllDecls(binding.record_dynamic);
     std.testing.refAllDecls(binding.server);
     std.testing.refAllDecls(binding.setting);
     std.testing.refAllDecls(binding.shapeshift);
