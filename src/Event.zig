@@ -186,11 +186,11 @@ pub fn Event(
             callbacks.append(g_alloc, callback) catch |err| switch (err) {
                 inline else => |e| {
                     const err_name = comptime @errorName(e);
-                    binding.server.zigLogMessage(
+                    binding.server.libtes3mp_LogMessage(
                         4,
                         "Zig Event " ++ export_name ++ " failed to bind function: " ++ err_name,
                     );
-                    return binding.server.zigStopServer(1);
+                    return binding.server.libtes3mp_StopServer(1);
                 },
             };
         }
@@ -206,7 +206,7 @@ pub fn Event(
             });
 
             @export(bind, .{
-                .name = "bind_" ++ export_name,
+                .name = "libtes3mp_bind_" ++ export_name,
                 .linkage = .Strong,
             });
         }

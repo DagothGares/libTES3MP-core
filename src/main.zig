@@ -31,7 +31,7 @@ const Status = event.Status;
 
 fn showInitialized(status: Status) void {
     if (@intFromEnum(status) & @intFromEnum(Status.Default) != 0) {
-        binding.server.zigLogMessage(1, "libTES3MP-core: Initialized.");
+        binding.server.libtes3mp_LogMessage(1, "libTES3MP-core: Initialized.");
     }
 }
 
@@ -45,7 +45,7 @@ fn unbindAll(_: Status, _: bool) void {
 
     load.unloadLibraries();
 
-    binding.server.zigLogMessage(
+    binding.server.libtes3mp_LogMessage(
         1,
         "libTES3MP-core: Freed all callbacks; closed all library handles.",
     );

@@ -23,7 +23,7 @@ const windows = std.os.windows;
 extern "kernel32" fn AttachConsole(dwProcessId: windows.DWORD) callconv(windows.WINAPI) windows.BOOL;
 
 pub fn init() Status {
-    server.zigLogMessage(
+    server.libtes3mp_LogMessage(
         1,
         "libTES3MP-core: Version 0.1.0, compiled in " ++
             @tagName(builtin.mode) ++ " mode.",
@@ -32,9 +32,9 @@ pub fn init() Status {
         // undo TES3MP hiding StdErr so error messages are visible
         const attached = AttachConsole(@bitCast(@as(i32, -1)));
         if (attached != 0) {
-            server.zigLogMessage(4, "libTES3MP-core: Could not attach to console window");
+            server.libtes3mp_LogMessage(4, "libTES3MP-core: Could not attach to console window");
 
-            server.zigStopServer(1);
+            server.libtes3mp_StopServer(1);
 
             return Status.None;
         }
@@ -80,26 +80,26 @@ pub fn init() Status {
             }
             break :blk cwd.openFileW(path_space.span(), .{}) catch |err| switch (err) {
                 inline else => |e| {
-                    server.zigLogMessage(
+                    server.libtes3mp_LogMessage(
                         4,
                         "libTES3MP-core: Could not open ./server/data/libraries.json: " ++
                             @errorName(e),
                     );
 
-                    server.zigStopServer(1);
+                    server.libtes3mp_StopServer(1);
 
                     return Status.None;
                 },
             };
         } else break :blk cwd.openFile("./server/data/libraries.json") catch |err| switch (err) {
             inline else => |e| {
-                server.zigLogMessage(
+                server.libtes3mp_LogMessage(
                     4,
                     "libTES3MP-core: Could not open ./server/data/libraries.json: " ++
                         @errorName(e),
                 );
 
-                server.zigStopServer(1);
+                server.libtes3mp_StopServer(1);
 
                 return Status.None;
             },
@@ -112,13 +112,13 @@ pub fn init() Status {
     {
         const should_begin = reader.next() catch |err| switch (err) {
             inline else => |e| {
-                server.zigLogMessage(
+                server.libtes3mp_LogMessage(
                     4,
                     "libTES3MP-core: Could not parse libraries.json " ++
                         @errorName(e),
                 );
 
-                server.zigStopServer(1);
+                server.libtes3mp_StopServer(1);
 
                 return Status.None;
             },
@@ -127,14 +127,14 @@ pub fn init() Status {
         if (should_begin != .array_begin) {
             var err_buf: [48 * 1024]u8 = undefined;
 
-            server.zigLogMessage(4, std.fmt.bufPrintZ(
+            server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                 &err_buf,
                 "libTES3MP-core: Could not parse libraries.json: " ++
                     "expected 'array_begin' token, got '{s}'",
                 .{@tagName(should_begin)},
             ) catch unreachable);
 
-            server.zigStopServer(1);
+            server.libtes3mp_StopServer(1);
 
             return Status.None;
         }
@@ -154,17 +154,17 @@ pub fn init() Status {
                 var library = blk: {
                     const full_length = prefix.len + path.len;
                     if (full_length > std.fs.MAX_PATH_BYTES) {
-                        defer server.zigStopServer(1);
+                        defer server.libtes3mp_StopServer(1);
 
                         var err_buff: [48 * 1024]u8 = undefined;
-                        server.zigLogMessage(4, std.fmt.bufPrintZ(
+                        server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                             &err_buff,
                             "libTES3MP-core: Could not open external library " ++
                                 prefix ++
                                 "{s}: path longer than maximum allowed",
                             .{path},
                         ) catch {
-                            server.zigLogMessage(
+                            server.libtes3mp_LogMessage(
                                 4,
                                 "libTES3MP-core: libraries.json contains absurdly long entry",
                             );
@@ -190,14 +190,14 @@ pub fn init() Status {
                         ) catch |err| switch (err) {
                             inline else => |e| {
                                 var err_buf: [48 * 1024]u8 = undefined;
-                                server.zigLogMessage(4, std.fmt.bufPrintZ(
+                                server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                                     &err_buf,
                                     "libTES3MP-core: Could not open external library " ++
                                         prefix ++ "{s}: " ++ @errorName(e),
                                     .{path},
                                 ) catch unreachable);
 
-                                server.zigStopServer(1);
+                                server.libtes3mp_StopServer(1);
 
                                 return Status.None;
                             },
@@ -228,26 +228,26 @@ pub fn init() Status {
 
                         if (len == 0) {
                             var err_buf: [48 * 1024]u8 = undefined;
-                            server.zigLogMessage(4, std.fmt.bufPrintZ(
+                            server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                                 &err_buf,
                                 "libTES3MP-core: Could not open external library " ++
                                     prefix ++ "{s}: BadPathName",
                                 .{path},
                             ) catch unreachable);
 
-                            server.zigStopServer(1);
+                            server.libtes3mp_StopServer(1);
 
                             return Status.None;
                         } else if (len / 2 > buf_len) {
                             var err_buf: [48 * 1024]u8 = undefined;
-                            server.zigLogMessage(4, std.fmt.bufPrintZ(
+                            server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                                 &err_buf,
                                 "libTES3MP-core: Could not open external library " ++
                                     prefix ++ "{s}: NameTooLong",
                                 .{path},
                             ) catch unreachable);
 
-                            server.zigStopServer(1);
+                            server.libtes3mp_StopServer(1);
 
                             return Status.None;
                         }
@@ -256,14 +256,14 @@ pub fn init() Status {
                         break :blk std.DynLib.openW(path_space.span()) catch |err| switch (err) {
                             inline else => |e| {
                                 var err_buf: [48 * 1024]u8 = undefined;
-                                server.zigLogMessage(4, std.fmt.bufPrintZ(
+                                server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                                     &err_buf,
                                     "libTES3MP-core: Could not open external library " ++
                                         prefix ++ "{s}: " ++ @errorName(e),
                                     .{path},
                                 ) catch unreachable);
 
-                                server.zigStopServer(1);
+                                server.libtes3mp_StopServer(1);
 
                                 return Status.None;
                             },
@@ -271,14 +271,14 @@ pub fn init() Status {
                     } else break :blk std.DynLib.open(full_path) catch |err| switch (err) {
                         inline else => |e| {
                             var err_buff: [48 * 1024]u8 = undefined;
-                            server.zigLogMessage(4, std.fmt.bufPrintZ(
+                            server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                                 &err_buff,
                                 "libTES3MP-core: Could not open external library " ++
                                     prefix ++ "{s}: " ++ @errorName(e),
                                 .{path},
                             ) catch unreachable);
 
-                            server.zigStopServer(1);
+                            server.libtes3mp_StopServer(1);
 
                             return Status.None;
                         },
@@ -290,7 +290,7 @@ pub fn init() Status {
                     "libmain",
                 ) orelse {
                     var err_buf: [48 * 1024]u8 = undefined;
-                    server.zigLogMessage(2, std.fmt.bufPrintZ(
+                    server.libtes3mp_LogMessage(2, std.fmt.bufPrintZ(
                         &err_buf,
                         "libTES3MP-core: external library {s} missing symbol \'libmain\'",
                         .{path},
@@ -307,7 +307,7 @@ pub fn init() Status {
                 libraries.append(g_alloc, library) catch |err| switch (err) {
                     inline else => {
                         var err_buf: [48 * 1024]u8 = undefined;
-                        server.zigLogMessage(4, std.fmt.bufPrintZ(
+                        server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                             &err_buf,
                             "libTES3MP-core: ran out of memory while binding external library {s}",
                             .{path},
@@ -315,7 +315,7 @@ pub fn init() Status {
 
                         library.close();
 
-                        server.zigStopServer(1);
+                        server.libtes3mp_StopServer(1);
 
                         return Status.None;
                     },
@@ -326,39 +326,39 @@ pub fn init() Status {
             .allocated_number => |n| {
                 defer allocator.free(n);
 
-                server.zigLogMessage(
+                server.libtes3mp_LogMessage(
                     4,
                     "libTES3MP-core: Could not parse libraries.json: " ++
                         "expected string token, got 'number'",
                 );
 
-                server.zigStopServer(1);
+                server.libtes3mp_StopServer(1);
 
                 return Status.None;
             },
             inline else => {
                 var err_buf: [16 * 1024]u8 = undefined;
-                server.zigLogMessage(4, std.fmt.bufPrintZ(
+                server.libtes3mp_LogMessage(4, std.fmt.bufPrintZ(
                     &err_buf,
                     "libTES3MP-core: Could not parse libraries.json: " ++
                         "expected string token, got '{s}'",
                     .{@tagName(next)},
                 ) catch unreachable);
 
-                server.zigStopServer(1);
+                server.libtes3mp_StopServer(1);
 
                 return Status.None;
             },
         }
     } else |err| switch (err) {
         inline else => |e| {
-            server.zigLogMessage(
+            server.libtes3mp_LogMessage(
                 4,
                 "libTES3MP-core: Could not parse libraries.json: " ++
                     @errorName(e),
             );
 
-            server.zigStopServer(1);
+            server.libtes3mp_StopServer(1);
 
             return Status.None;
         },

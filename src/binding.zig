@@ -30,7 +30,8 @@ pub const deprecated = @import("binding/deprecated.zig");
 pub const default = @import("binding/default.zig");
 
 // The prefix used for variables intended to hold TES3MP-supplied function pointers.
-pub export var prefix: [3]u8 = "zig".*;
+// Why the hell does TES3MP complain if this is a constant instead of a variable?
+pub export var prefix: [19]u8 = "libtes3mp_internal_".*;
 
 pub const ForeignFunction = opaque {};
 // std.builtin.vaList is broken on Windows x86_64

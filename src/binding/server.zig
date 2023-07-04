@@ -2,130 +2,130 @@
 
 const binding = @import("../binding.zig");
 
-pub export var zigLogMessage: *const fn (level: c_ushort, message: [*:0]const u8) callconv(.C) void = &binding.ub_fn_ushort_str;
-pub export var zigLogAppend: *const fn (level: c_ushort, message: [*:0]const u8) callconv(.C) void = &binding.ub_fn_ushort_str;
+pub export var libtes3mp_internal_LogMessage: *const fn (level: c_ushort, message: [*:0]const u8) callconv(.C) void = &binding.ub_fn_ushort_str;
+pub export var libtes3mp_internal_LogAppend: *const fn (level: c_ushort, message: [*:0]const u8) callconv(.C) void = &binding.ub_fn_ushort_str;
 
-pub export var zigStopServer: *const fn (code: c_int) callconv(.C) void = &binding.ub_fn_int;
+pub export var libtes3mp_internal_StopServer: *const fn (code: c_int) callconv(.C) void = &binding.ub_fn_int;
 
-pub export var zigKick: *const fn (pid: c_ushort) callconv(.C) void = &binding.ub_fn_ushort;
-pub export var zigBanAddress: *const fn (ipAddress: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
-pub export var zigUnbanAddress: *const fn (ipAddress: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
+pub export var libtes3mp_internal_Kick: *const fn (pid: c_ushort) callconv(.C) void = &binding.ub_fn_ushort;
+pub export var libtes3mp_internal_BanAddress: *const fn (ipAddress: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
+pub export var libtes3mp_internal_UnbanAddress: *const fn (ipAddress: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
 
-pub export var zigDoesFilePathExist: *const fn (filePath: [*:0]const u8) callconv(.C) bool = &binding.ub_fn_str;
-pub export var zigGetCaseInsensitiveFilename: *const fn (folderPath: [*:0]const u8, filename: [*:0]const u8) callconv(.C) ?[*:0]const u8 = &binding.ub_fn_2str;
-pub export var zigGetDataPath: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
-pub export var zigGetMillisecondsSinceServerStart: *const fn () callconv(.C) c_uint = &binding.ub_fn;
-pub export var zigGetOperatingSystemType: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
-pub export var zigGetArchitectureType: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
-pub export var zigGetServerVersion: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
-pub export var zigGetProtocolVersion: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
-pub export var zigGetAvgPing: *const fn (pid: c_ushort) callconv(.C) c_int = &binding.ub_fn_ushort;
-pub export var zigGetIP: *const fn (pid: c_ushort) callconv(.C) ?[*:0]const u8 = &binding.ub_fn_ushort;
-pub export var zigGetMaxPlayers: *const fn () callconv(.C) c_uint = &binding.ub_fn;
-pub export var zigGetPort: *const fn () callconv(.C) c_ushort = &binding.ub_fn;
-pub export var zigHasPassword: *const fn () callconv(.C) bool = &binding.ub_fn;
-pub export var zigGetDataFileEnforcementState: *const fn () callconv(.C) bool = &binding.ub_fn;
-pub export var zigGetScriptErrorIgnoringState: *const fn () callconv(.C) bool = &binding.ub_fn;
+pub export var libtes3mp_internal_DoesFilePathExist: *const fn (filePath: [*:0]const u8) callconv(.C) bool = &binding.ub_fn_str;
+pub export var libtes3mp_internal_GetCaseInsensitiveFilename: *const fn (folderPath: [*:0]const u8, filename: [*:0]const u8) callconv(.C) ?[*:0]const u8 = &binding.ub_fn_2str;
+pub export var libtes3mp_internal_GetDataPath: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
+pub export var libtes3mp_internal_GetMillisecondsSinceServerStart: *const fn () callconv(.C) c_uint = &binding.ub_fn;
+pub export var libtes3mp_internal_GetOperatingSystemType: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
+pub export var libtes3mp_internal_GetArchitectureType: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
+pub export var libtes3mp_internal_GetServerVersion: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
+pub export var libtes3mp_internal_GetProtocolVersion: *const fn () callconv(.C) ?[*:0]const u8 = &binding.ub_fn;
+pub export var libtes3mp_internal_GetAvgPing: *const fn (pid: c_ushort) callconv(.C) c_int = &binding.ub_fn_ushort;
+pub export var libtes3mp_internal_GetIP: *const fn (pid: c_ushort) callconv(.C) ?[*:0]const u8 = &binding.ub_fn_ushort;
+pub export var libtes3mp_internal_GetMaxPlayers: *const fn () callconv(.C) c_uint = &binding.ub_fn;
+pub export var libtes3mp_internal_GetPort: *const fn () callconv(.C) c_ushort = &binding.ub_fn;
+pub export var libtes3mp_internal_HasPassword: *const fn () callconv(.C) bool = &binding.ub_fn;
+pub export var libtes3mp_internal_GetDataFileEnforcementState: *const fn () callconv(.C) bool = &binding.ub_fn;
+pub export var libtes3mp_internal_GetScriptErrorIgnoringState: *const fn () callconv(.C) bool = &binding.ub_fn;
 
-pub export var zigSetGameMode: *const fn (gameMode: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
-pub export var zigSetHostname: *const fn (name: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
-pub export var zigSetServerPassword: *const fn (password: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
-pub export var zigSetDataFileEnforcementState: *const fn (state: bool) callconv(.C) void = &binding.ub_fn_bool;
-pub export var zigSetScriptErrorIgnoringState: *const fn (state: bool) callconv(.C) void = &binding.ub_fn_bool;
-pub export var zigSetRuleString: *const fn (key: [*:0]const u8, value: [*:0]const u8) callconv(.C) void = &binding.ub_fn_2str;
-pub export var zigSetRuleValue: *const fn (key: [*:0]const u8, value: f64) callconv(.C) void = &binding.ub_fn_str_f64;
+pub export var libtes3mp_internal_SetGameMode: *const fn (gameMode: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
+pub export var libtes3mp_internal_SetHostname: *const fn (name: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
+pub export var libtes3mp_internal_SetServerPassword: *const fn (password: [*:0]const u8) callconv(.C) void = &binding.ub_fn_str;
+pub export var libtes3mp_internal_SetDataFileEnforcementState: *const fn (state: bool) callconv(.C) void = &binding.ub_fn_bool;
+pub export var libtes3mp_internal_SetScriptErrorIgnoringState: *const fn (state: bool) callconv(.C) void = &binding.ub_fn_bool;
+pub export var libtes3mp_internal_SetRuleString: *const fn (key: [*:0]const u8, value: [*:0]const u8) callconv(.C) void = &binding.ub_fn_2str;
+pub export var libtes3mp_internal_SetRuleValue: *const fn (key: [*:0]const u8, value: f64) callconv(.C) void = &binding.ub_fn_str_f64;
 
-pub export var zigAddDataFileRequirement: *const fn (dataFilename: [*:0]const u8, checksumString: [*:0]const u8) callconv(.C) void = &binding.ub_fn_2str;
+pub export var libtes3mp_internal_AddDataFileRequirement: *const fn (dataFilename: [*:0]const u8, checksumString: [*:0]const u8) callconv(.C) void = &binding.ub_fn_2str;
 
-pub export fn impl_LogMessage(level: c_ushort, message: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigLogMessage, .{ level, message });
+pub export fn libtes3mp_LogMessage(level: c_ushort, message: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_LogMessage(level, message);
 }
-pub export fn impl_LogAppend(level: c_ushort, message: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigLogAppend, .{ level, message });
-}
-
-pub export fn impl_StopServer(code: c_int) callconv(.C) void {
-    return @call(.never_inline, zigStopServer, .{code});
+pub export fn libtes3mp_LogAppend(level: c_ushort, message: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_LogAppend(level, message);
 }
 
-pub export fn impl_Kick(pid: c_ushort) callconv(.C) void {
-    return @call(.never_inline, zigKick, .{pid});
-}
-pub export fn impl_BanAddress(ipAddress: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigBanAddress, .{ipAddress});
-}
-pub export fn impl_UnbanAddress(ipAddress: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigUnbanAddress, .{ipAddress});
+pub export fn libtes3mp_StopServer(code: c_int) callconv(.C) void {
+    return libtes3mp_internal_StopServer(code);
 }
 
-pub export fn impl_DoesFilePathExist(filePath: [*:0]const u8) callconv(.C) bool {
-    return @call(.never_inline, zigDoesFilePathExist, .{filePath});
+pub export fn libtes3mp_Kick(pid: c_ushort) callconv(.C) void {
+    return libtes3mp_internal_Kick(pid);
 }
-pub export fn impl_GetCaseInsensitiveFilename(folderPath: [*:0]const u8, filename: [*:0]const u8) callconv(.C) ?[*:0]const u8 {
-    return @call(.never_inline, zigGetCaseInsensitiveFilename, .{ folderPath, filename });
+pub export fn libtes3mp_BanAddress(ipAddress: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_BanAddress(ipAddress);
 }
-pub export fn impl_GetDataPath() callconv(.C) ?[*:0]const u8 {
-    return @call(.never_inline, zigGetDataPath, .{});
-}
-pub export fn impl_GetMillisecondsSinceServerStart() callconv(.C) c_uint {
-    return @call(.never_inline, zigGetMillisecondsSinceServerStart, .{});
-}
-pub export fn impl_GetOperatingSystemType() callconv(.C) ?[*:0]const u8 {
-    return @call(.never_inline, zigGetOperatingSystemType, .{});
-}
-pub export fn impl_GetArchitectureType() callconv(.C) ?[*:0]const u8 {
-    return @call(.never_inline, zigGetArchitectureType, .{});
-}
-pub export fn impl_GetServerVersion() callconv(.C) ?[*:0]const u8 {
-    return @call(.never_inline, zigGetServerVersion, .{});
-}
-pub export fn impl_GetProtocolVersion() callconv(.C) ?[*:0]const u8 {
-    return @call(.never_inline, zigGetProtocolVersion, .{});
-}
-pub export fn impl_GetAvgPing(pid: c_ushort) callconv(.C) c_int {
-    return @call(.never_inline, zigGetAvgPing, .{pid});
-}
-pub export fn impl_GetIP(pid: c_ushort) callconv(.C) ?[*:0]const u8 {
-    return @call(.never_inline, zigGetIP, .{pid});
-}
-pub export fn impl_GetMaxPlayers() callconv(.C) c_uint {
-    return @call(.never_inline, zigGetMaxPlayers, .{});
-}
-pub export fn impl_GetPort() callconv(.C) c_ushort {
-    return @call(.never_inline, zigGetPort, .{});
-}
-pub export fn impl_HasPassword() callconv(.C) bool {
-    return @call(.never_inline, zigHasPassword, .{});
-}
-pub export fn impl_GetDataFileEnforcementState() callconv(.C) bool {
-    return @call(.never_inline, zigGetDataFileEnforcementState, .{});
-}
-pub export fn impl_GetScriptErrorIgnoringState() callconv(.C) bool {
-    return @call(.never_inline, zigGetScriptErrorIgnoringState, .{});
+pub export fn libtes3mp_UnbanAddress(ipAddress: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_UnbanAddress(ipAddress);
 }
 
-pub export fn impl_SetGameMode(gameMode: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigSetGameMode, .{gameMode});
+pub export fn libtes3mp_DoesFilePathExist(filePath: [*:0]const u8) callconv(.C) bool {
+    return libtes3mp_internal_DoesFilePathExist(filePath);
 }
-pub export fn impl_SetHostname(name: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigSetHostname, .{name});
+pub export fn libtes3mp_GetCaseInsensitiveFilename(folderPath: [*:0]const u8, filename: [*:0]const u8) callconv(.C) ?[*:0]const u8 {
+    return libtes3mp_internal_GetCaseInsensitiveFilename(folderPath, filename);
 }
-pub export fn impl_SetServerPassword(password: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigSetServerPassword, .{password});
+pub export fn libtes3mp_GetDataPath() callconv(.C) ?[*:0]const u8 {
+    return libtes3mp_internal_GetDataPath();
 }
-pub export fn impl_SetDataFileEnforcementState(state: bool) callconv(.C) void {
-    return @call(.never_inline, zigSetDataFileEnforcementState, .{state});
+pub export fn libtes3mp_GetMillisecondsSinceServerStart() callconv(.C) c_uint {
+    return libtes3mp_internal_GetMillisecondsSinceServerStart();
 }
-pub export fn impl_SetScriptErrorIgnoringState(state: bool) callconv(.C) void {
-    return @call(.never_inline, zigSetScriptErrorIgnoringState, .{state});
+pub export fn libtes3mp_GetOperatingSystemType() callconv(.C) ?[*:0]const u8 {
+    return libtes3mp_internal_GetOperatingSystemType();
 }
-pub export fn impl_SetRuleString(key: [*:0]const u8, value: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigSetRuleString, .{ key, value });
+pub export fn libtes3mp_GetArchitectureType() callconv(.C) ?[*:0]const u8 {
+    return libtes3mp_internal_GetArchitectureType();
 }
-pub export fn impl_SetRuleValue(key: [*:0]const u8, value: f64) callconv(.C) void {
-    return @call(.never_inline, zigSetRuleValue, .{ key, value });
+pub export fn libtes3mp_GetServerVersion() callconv(.C) ?[*:0]const u8 {
+    return libtes3mp_internal_GetServerVersion();
+}
+pub export fn libtes3mp_GetProtocolVersion() callconv(.C) ?[*:0]const u8 {
+    return libtes3mp_internal_GetProtocolVersion();
+}
+pub export fn libtes3mp_GetAvgPing(pid: c_ushort) callconv(.C) c_int {
+    return libtes3mp_internal_GetAvgPing(pid);
+}
+pub export fn libtes3mp_GetIP(pid: c_ushort) callconv(.C) ?[*:0]const u8 {
+    return libtes3mp_internal_GetIP(pid);
+}
+pub export fn libtes3mp_GetMaxPlayers() callconv(.C) c_uint {
+    return libtes3mp_internal_GetMaxPlayers();
+}
+pub export fn libtes3mp_GetPort() callconv(.C) c_ushort {
+    return libtes3mp_internal_GetPort();
+}
+pub export fn libtes3mp_HasPassword() callconv(.C) bool {
+    return libtes3mp_internal_HasPassword();
+}
+pub export fn libtes3mp_GetDataFileEnforcementState() callconv(.C) bool {
+    return libtes3mp_internal_GetDataFileEnforcementState();
+}
+pub export fn libtes3mp_GetScriptErrorIgnoringState() callconv(.C) bool {
+    return libtes3mp_internal_GetScriptErrorIgnoringState();
 }
 
-pub export fn impl_AddDataFileRequirement(dataFilename: [*:0]const u8, checksumString: [*:0]const u8) callconv(.C) void {
-    return @call(.never_inline, zigAddDataFileRequirement, .{ dataFilename, checksumString });
+pub export fn libtes3mp_SetGameMode(gameMode: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_SetGameMode(gameMode);
+}
+pub export fn libtes3mp_SetHostname(name: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_SetHostname(name);
+}
+pub export fn libtes3mp_SetServerPassword(password: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_SetServerPassword(password);
+}
+pub export fn libtes3mp_SetDataFileEnforcementState(state: bool) callconv(.C) void {
+    return libtes3mp_internal_SetDataFileEnforcementState(state);
+}
+pub export fn libtes3mp_SetScriptErrorIgnoringState(state: bool) callconv(.C) void {
+    return libtes3mp_internal_SetScriptErrorIgnoringState(state);
+}
+pub export fn libtes3mp_SetRuleString(key: [*:0]const u8, value: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_SetRuleString(key, value);
+}
+pub export fn libtes3mp_SetRuleValue(key: [*:0]const u8, value: f64) callconv(.C) void {
+    return libtes3mp_internal_SetRuleValue(key, value);
+}
+
+pub export fn libtes3mp_AddDataFileRequirement(dataFilename: [*:0]const u8, checksumString: [*:0]const u8) callconv(.C) void {
+    return libtes3mp_internal_AddDataFileRequirement(dataFilename, checksumString);
 }
